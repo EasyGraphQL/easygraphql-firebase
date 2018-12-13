@@ -1,0 +1,3 @@
+FIREBASE_API_KEY="AIzaSyCVzsT_QHcFdXr-96EDdWMEmKozU4WqbQA."
+FIREBASE_AUTH_DOMAIN="egql-81422.firebaseapp.com"
+FIREBASE_DATABASE_URL="https://egql-81422.firebaseio.com"

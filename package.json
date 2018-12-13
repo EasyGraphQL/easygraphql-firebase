@@ -1,0 +1,37 @@
+{
+  "name": "easygraphql-firebase",
+  "version": "0.0.1",
+  "description": "",
+  "bin": {
+    "easygraphql-firebase": "./bin/easygraphql-firebase.js"
+  },
+  "homepage": "https://github.com/EasyGraphQL/easygraphql-firebase",
+  "author": {
+    "name": "EasyGraphQL",
+    "url": "https://github.com/EasyGraphQL"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EasyGraphQL/easygraphql-firebase"
+  },
+  "bugs": {
+    "url": "https://github.com/EasyGraphQL/easygraphql-firebase/issues"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "clipboardy": "^1.2.3",
+    "easygraphql-parser": "0.0.2",
+    "firebase": "^5.7.0",
+    "fs-extra": "^7.0.1",
+    "inquirer": "^6.2.1",
+    "minimist": "^1.2.0",
+    "ora": "^3.0.0"
+  },
+  "devDependencies": {
+    "standard": "^12.0.1"
+  },
+  "scripts": {
+    "standard-fix": "standard --fix",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
