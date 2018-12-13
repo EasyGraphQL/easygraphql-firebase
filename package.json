@@ -1,6 +1,6 @@
 {
   "name": "easygraphql-firebase",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Create GraphQL server connected with Firebase just with a schema.",
   "bin": {
     "easygraphql-firebase": "./bin/easygraphql-firebase.js"
