@@ -10,6 +10,9 @@
 to your Firebase real-time database just using a GraphQL schema.
 
 ## Installation
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/EasyGraphQL/easygraphql-firebase.svg)](https://greenkeeper.io/)
+
 ```bash
 $ npm install easygraphql-firebase -g
 ```
