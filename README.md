@@ -138,6 +138,14 @@ This a **beta** version, so the recommendations are:
 + If you are having a lot of records, and you are making a query that returns an array
   add a limit to it!
 
+## Deploying with Now ▲
+To deploy with now, be sure to have it installed and config on your computer.
+
+To use it, just pass the flag `--now` to the command on the terminal:
+
+```bash
+$ easygraphql-firebase --now
+```
 
 # License
 ### The MIT License

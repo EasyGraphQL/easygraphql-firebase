@@ -1,6 +1,5 @@
 'use strict'
 
-const fs = require('fs-extra')
 const { spawn } = require('child_process')
 const clipboardy = require('clipboardy')
 const ora = require('ora')
@@ -16,7 +15,7 @@ function runLocal (dirPath, port) {
 }
 
 function startServer (dirPath, port) {
-  spawn('npm', ['start'], {
+  spawn('npm', ['run', 'dev'], {
     cwd: dirPath
   })
 
@@ -25,7 +24,6 @@ function startServer (dirPath, port) {
   clipboardy.writeSync(localUrl)
   console.log('> url copied on clipboard: ', localUrl)
 
-  // process.on('exit', exitHandler.bind(null, { dirPath }));
   process.on('SIGINT', exitHandler.bind(null, { dirPath }))
   process.on('SIGUSR1', exitHandler.bind(null, { dirPath }))
   process.on('SIGUSR2', exitHandler.bind(null, { dirPath }))
@@ -33,7 +31,6 @@ function startServer (dirPath, port) {
 }
 
 function exitHandler (options) {
-  fs.removeSync(options.dirPath)
   console.log('> Thanks for using easygraphql-firebase 😀')
 }
 
