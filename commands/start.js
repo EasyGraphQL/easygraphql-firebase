@@ -16,6 +16,7 @@ const createResolvers = require('../util/createResolvers')
 const createEnvFile = require('../util/createEnvFile')
 const createTests = require('../util/createTests')
 const startServer = require('../util/startServer')
+const deployNow = require('../util/deployNow')
 
 const questions = []
 
@@ -28,6 +29,7 @@ function createProject () {
   const databaseUrl = argv.databaseUrl ? argv.databaseUrl : null
   const start = !(argv.start && argv.start === 'false')
   const port = argv.p && argv.p > 999 ? argv.p : 7000
+  const now = !!argv.now
 
   if (arg && (arg.includes('.gql') || arg.includes('.graphql')) && fs.existsSync(arg)) {
     fileName = arg
@@ -76,16 +78,17 @@ function createProject () {
     })
   }
 
-  inquirer.prompt(questions).then(answers => handleResponse(answers, fileName, filePath, start, port, apiKey, databaseUrl))
+  inquirer.prompt(questions).then(answers => handleResponse(answers, fileName, filePath, start, port, apiKey, databaseUrl, now))
 }
 
-async function handleResponse (answers, fileName, filePath, start, port, apiKey, databaseUrl) {
+async function handleResponse (answers, fileName, filePath, start, port, apiKey, databaseUrl, now) {
   let dirPath
   try {
     fileName = fileName || answers['schemaName']
     apiKey = apiKey || answers['apiKey']
     databaseUrl = databaseUrl || answers['databaseUrl']
     spinner.start()
+
     const dirPath = path.join(path.resolve(), 'generated')
     createApp(dirPath)
     await createApi(dirPath)
@@ -93,12 +96,15 @@ async function handleResponse (answers, fileName, filePath, start, port, apiKey,
     createEnvFile(dirPath, apiKey, databaseUrl)
     createResolvers(dirPath)
     createTests(dirPath)
+    if (start && !now) {
+      startServer(dirPath, port)
+    }
+    if (now) {
+      deployNow(dirPath, apiKey, databaseUrl)
+    }
     spawn('standard', ['--fix'], {
       cwd: dirPath
     })
-    if (start) {
-      startServer(dirPath, port)
-    }
     spinner.stop()
   } catch (err) {
     spinner.stop()

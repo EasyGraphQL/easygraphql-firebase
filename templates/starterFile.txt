@@ -31,7 +31,7 @@ const firebase = firebaseClient.initializeApp({
 app.use('/graphql', (req, res) => {
   graphqlHTTP({
     schema,
-    graphiql: process.env.NODE_ENV === 'development',
+    graphiql: true,
     context: { firebase }
   })(req, res)
 })
