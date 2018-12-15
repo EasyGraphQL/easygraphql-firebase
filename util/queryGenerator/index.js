@@ -64,14 +64,35 @@ function createMutation (mutation) {
   const { name, type } = mutation
 
   const databaseName = `${type.toLowerCase()}s`
-  const databseRef = `firebase.database().ref().child('${databaseName}').push({ ...input })`
 
-  const createdMutation = `
-    const ${name} = async (obj, { input }, { firebase }) => {
-      const ref = ${databseRef}
+  let result
+  if (name === `update${type}ByKey`) {
+    result = `
+      const key = input.key
+      delete input.key
+      
+      const ref = firebase.database().ref(\`/${databaseName}/$\{key}\`)
+      const result = (await ref.once('value')).val()
+      const infoToUpdate = Object.assign({}, result, input)
+
+      firebase.database().ref(\`/${databaseName}/$\{key}\`).set(infoToUpdate)
+
+      const data = Object.assign({ key }, infoToUpdate)
+
+      return data
+    `
+  } else {
+    result = `
+      const ref = firebase.database().ref().child('${databaseName}').push({ ...input })
 
       const result = Object.assign({ key: ref.key }, input)
       return result
+    `
+  }
+
+  const createdMutation = `
+    const ${name} = async (obj, { input }, { firebase }) => {
+      ${result}
     }
   `
 

@@ -8,12 +8,16 @@ const ora = require('ora')
 const spinner = ora('▲ Deploying to now!')
 
 function deployNow (dirPath, apiKey, databaseUrl) {
-  spinner.start()
-  if (!dirPath) {
-    throw new Error('The path cant be empty')
+  try {
+    spinner.start()
+    if (!dirPath) {
+      throw new Error('The path cant be empty')
+    }
+    createNowEnvFile(dirPath, apiKey, databaseUrl)
+    runDeployNow(dirPath)
+  } catch (err) {
+    throw err
   }
-  createNowEnvFile(dirPath, apiKey, databaseUrl)
-  runDeployNow(dirPath)
 }
 
 function createNowEnvFile (dirPath, apiKey, databaseUrl) {
@@ -48,9 +52,13 @@ function runDeployNow (dirPath) {
   })
 
   consoleProcess.on('close', (code) => {
-    spinner.succeed()
-    console.log('> url copied on clipboard: ', nowUrl)
-    console.log('> Thanks for using easygraphql 😀')
+    if (nowUrl) {
+      spinner.succeed()
+      console.log('> url copied on clipboard: ', nowUrl)
+      console.log('> Thanks for using easygraphql 😀')
+    } else {
+      console.log('There was an error deploying to now ▲')
+    }
   })
 }
 
