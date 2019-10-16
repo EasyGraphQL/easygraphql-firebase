@@ -1,16 +1,16 @@
-'use strict'
+"use strict";
 
-function createQuery (query) {
-  const { name, type, isArray } = query
+function createQuery(query) {
+  const { name, type, isArray } = query;
 
-  const args = query.arguments.map(arg => arg.name)
+  const args = query.arguments.map(arg => arg.name);
 
-  const queryArgs = args.length ? `const { ${args.join(', ')} } = args` : ''
+  const queryArgs = args.length ? `const { ${args.join(", ")} } = args` : "";
 
-  const databaseName = `${type.toLowerCase()}s`
-  const databseRef = `firebase.database().ref('${databaseName}')`
+  const databaseName = `${type.toLowerCase()}s`;
+  const databseRef = `firebase.database().ref('${databaseName}')`;
 
-  let response
+  let response;
 
   if (name === `get${type}ByKey`) {
     response = `
@@ -19,7 +19,7 @@ function createQuery (query) {
       const data = Object.assign({ key }, result)
 
       return data
-    `
+    `;
   } else if (isArray) {
     response = `
       const ref = ${databseRef}
@@ -34,12 +34,14 @@ function createQuery (query) {
         });
       });
       return result
-    `
+    `;
   } else {
     response = `
       const ref = ${databseRef}
       const result = await new Promise(resolve => {
-        ref.orderByChild('${args[0]}').equalTo(${args[0]}).on('child_added', function(snapshot) {
+        ref.orderByChild('${args[0]}').equalTo(${
+      args[0]
+    }).on('child_added', function(snapshot) {
           const key = snapshot.key;
           const data = snapshot.val();
             
@@ -47,7 +49,7 @@ function createQuery (query) {
         })
       });
       return result
-    `
+    `;
   }
 
   const createdQuery = `
@@ -55,17 +57,17 @@ function createQuery (query) {
       ${queryArgs}
       ${response}
     }
-  `
+  `;
 
-  return createdQuery
+  return createdQuery;
 }
 
-function createMutation (mutation) {
-  const { name, type } = mutation
+function createMutation(mutation) {
+  const { name, type } = mutation;
 
-  const databaseName = `${type.toLowerCase()}s`
+  const databaseName = `${type.toLowerCase()}s`;
 
-  let result
+  let result;
   if (name === `update${type}ByKey`) {
     result = `
       const key = input.key
@@ -80,23 +82,23 @@ function createMutation (mutation) {
       const data = Object.assign({ key }, infoToUpdate)
 
       return data
-    `
+    `;
   } else {
     result = `
       const ref = firebase.database().ref().child('${databaseName}').push({ ...input })
 
       const result = Object.assign({ key: ref.key }, input)
       return result
-    `
+    `;
   }
 
   const createdMutation = `
     const ${name} = async (obj, { input }, { firebase }) => {
       ${result}
     }
-  `
+  `;
 
-  return createdMutation
+  return createdMutation;
 }
 
-module.exports = { createQuery, createMutation }
+module.exports = { createQuery, createMutation };

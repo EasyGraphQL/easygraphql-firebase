@@ -5,6 +5,15 @@
   "bin": {
     "easygraphql-firebase": "./bin/easygraphql-firebase.js"
   },
+  "scripts": {
+    "prettier:check": "prettier --write './{bin,commands,util}/**/*.{js,graphql}'",
+    "prettier:format": "prettier --write './{bin,commands,util}/**/*.{js,graphql}'"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run prettier:format && git add ."
+    }
+  },
   "homepage": "https://github.com/EasyGraphQL/easygraphql-firebase",
   "author": {
     "name": "EasyGraphQL",
@@ -28,10 +37,7 @@
     "ora": "^3.0.0"
   },
   "devDependencies": {
-    "standard": "^12.0.1"
-  },
-  "scripts": {
-    "standard-fix": "standard --fix",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "husky": "^3.0.8",
+    "prettier": "^1.18.2"
   }
 }

@@ -1,65 +1,65 @@
-'use strict'
+"use strict";
 
-const fs = require('fs-extra')
-const { spawn } = require('child_process')
-const clipboardy = require('clipboardy')
-const ora = require('ora')
+const fs = require("fs-extra");
+const { spawn } = require("child_process");
+const clipboardy = require("clipboardy");
+const ora = require("ora");
 
-const spinner = ora('▲ Deploying to now!')
+const spinner = ora("▲ Deploying to now!");
 
-function deployNow (dirPath, apiKey, databaseUrl) {
+function deployNow(dirPath, apiKey, databaseUrl) {
   try {
-    spinner.start()
+    spinner.start();
     if (!dirPath) {
-      throw new Error('The path cant be empty')
+      throw new Error("The path cant be empty");
     }
-    createNowEnvFile(dirPath, apiKey, databaseUrl)
-    runDeployNow(dirPath)
+    createNowEnvFile(dirPath, apiKey, databaseUrl);
+    runDeployNow(dirPath);
   } catch (err) {
-    throw err
+    throw err;
   }
 }
 
-function createNowEnvFile (dirPath, apiKey, databaseUrl) {
+function createNowEnvFile(dirPath, apiKey, databaseUrl) {
   const nowEnv = {
-    'env': {
-      'FIREBASE_API_KEY': apiKey,
-      'FIREBASE_DATABASE_URL': databaseUrl
+    env: {
+      FIREBASE_API_KEY: apiKey,
+      FIREBASE_DATABASE_URL: databaseUrl
     }
-  }
-  fs.outputFileSync(`${dirPath}/now.json`, JSON.stringify(nowEnv))
+  };
+  fs.outputFileSync(`${dirPath}/now.json`, JSON.stringify(nowEnv));
 }
 
-function runDeployNow (dirPath) {
-  const consoleProcess = spawn('now', ['-p'], {
+function runDeployNow(dirPath) {
+  const consoleProcess = spawn("now", ["-p"], {
     cwd: dirPath
-  })
+  });
 
-  let nowUrl
-  consoleProcess.stdout.setEncoding('utf8')
-  consoleProcess.stderr.setEncoding('utf8')
-  consoleProcess.stderr.pipe(process.stdout)
+  let nowUrl;
+  consoleProcess.stdout.setEncoding("utf8");
+  consoleProcess.stderr.setEncoding("utf8");
+  consoleProcess.stderr.pipe(process.stdout);
 
-  consoleProcess.stdout.on('data', (data) => {
-    if (data.includes('https://')) {
-      nowUrl = `${data}/graphql`
-      clipboardy.writeSync(nowUrl)
+  consoleProcess.stdout.on("data", data => {
+    if (data.includes("https://")) {
+      nowUrl = `${data}/graphql`;
+      clipboardy.writeSync(nowUrl);
     }
-  })
+  });
 
-  consoleProcess.stderr.on('data', (data) => {
-    console.log(data)
-  })
+  consoleProcess.stderr.on("data", data => {
+    console.log(data);
+  });
 
-  consoleProcess.on('close', (code) => {
+  consoleProcess.on("close", code => {
     if (nowUrl) {
-      spinner.succeed()
-      console.log('> url copied on clipboard: ', nowUrl)
-      console.log('> Thanks for using easygraphql 😀')
+      spinner.succeed();
+      console.log("> url copied on clipboard: ", nowUrl);
+      console.log("> Thanks for using easygraphql 😀");
     } else {
-      console.log('There was an error deploying to now ▲')
+      console.log("There was an error deploying to now ▲");
     }
-  })
+  });
 }
 
-module.exports = deployNow
+module.exports = deployNow;

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-'use strict'
+"use strict";
 
-const createProject = require('../commands/start')
+const createProject = require("../commands/start");
 
-createProject()
+createProject();
